@@ -1,85 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rate a User</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h2>Rate this person</h2>
-    <p id="personName"></p>
+    <p id="personName">Loading...</p>
     <div class="stars" id="stars"></div>
-    <button id="submitRating">Submit</button>
+    <button id="submitRating">Submit Rating</button>
   </div>
 
-  <script type="module">
-    import { db, auth } from './firebase-config.js';
-    import {
-      doc, getDoc, updateDoc, arrayUnion
-    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-    import {
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
+  <script>
     const starsDiv = document.getElementById('stars');
     const personName = document.getElementById('personName');
-    const uid = new URLSearchParams(location.search).get('uid');
-    let currentRating = 0;
+    const submitBtn = document.getElementById('submitRating');
 
-    // Show stars
+    const urlParams = new URLSearchParams(window.location.search);
+    const uidToRate = urlParams.get('uid');
+
+    let selectedRating = 0;
+
+    // Check if user is logged in
+    const loggedInUserRaw = localStorage.getItem('loggedInUser');
+    if (!loggedInUserRaw) {
+      alert('You must be logged in to rate someone.');
+      window.location.href = 'index.html';
+    }
+
+    const loggedInUser = JSON.parse(loggedInUserRaw);
+
+    if (!uidToRate) {
+      personName.textContent = 'Invalid user to rate.';
+      submitBtn.disabled = true;
+    } else if (uidToRate === loggedInUser.uid) {
+      personName.textContent = "You cannot rate yourself!";
+      submitBtn.disabled = true;
+    } else {
+      const userRaw = localStorage.getItem('user_' + uidToRate);
+      if (!userRaw) {
+        personName.textContent = "User not found.";
+        submitBtn.disabled = true;
+      } else {
+        const user = JSON.parse(userRaw);
+        personName.textContent = `${user.firstName} ${user.lastName}`;
+      }
+    }
+
+    // Create 5 stars
     for (let i = 1; i <= 5; i++) {
       const star = document.createElement('span');
       star.textContent = '⭐';
       star.dataset.value = i;
-      star.onclick = () => {
-        currentRating = i;
-        highlightStars(i);
-      };
+      star.style.color = 'gray';
+      star.style.cursor = 'pointer';
+
+      star.addEventListener('click', () => {
+        selectedRating = i;
+        updateStars(i);
+      });
+
       starsDiv.appendChild(star);
     }
 
-    function highlightStars(rating) {
-      document.querySelectorAll('#stars span').forEach(star => {
+    function updateStars(rating) {
+      const stars = starsDiv.querySelectorAll('span');
+      stars.forEach(star => {
         star.style.color = star.dataset.value <= rating ? 'gold' : 'gray';
       });
     }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("You must be logged in to rate.");
-        location.href = "index.html";
+    submitBtn.addEventListener('click', () => {
+      if (selectedRating === 0) {
+        alert('Please select a rating first.');
         return;
       }
 
-      const docRef = doc(db, "users", uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        personName.textContent = `${data.firstName} ${data.lastName}`;
+      const userRaw = localStorage.getItem('user_' + uidToRate);
+      if (!userRaw) {
+        alert('User not found, cannot submit rating.');
+        return;
       }
+      const user = JSON.parse(userRaw);
+
+      if (!user.ratings) user.ratings = [];
+      user.ratings.push(selectedRating);
+
+      localStorage.setItem('user_' + uidToRate, JSON.stringify(user));
+
+      alert(`You rated ${user.firstName} ${user.lastName} with ${selectedRating} star(s)!`);
+
+      selectedRating = 0;
+      updateStars(0);
     });
-
-    document.getElementById('submitRating').onclick = async () => {
-      if (currentRating === 0) {
-        alert("Please select a rating.");
-        return;
-      }
-
-      const userRef = doc(db, 'users', uid);
-      const docSnap = await getDoc(userRef);
-      const prevRatings = docSnap.data().ratings || [];
-      const newRatings = [...prevRatings, currentRating];
-      const avg = newRatings.reduce((a, b) => a + b, 0) / newRatings.length;
-
-      await updateDoc(userRef, {
-        ratings: arrayUnion(currentRating),
-        avgRating: avg
-      });
-
-      alert("Thanks for your rating!");
-    };
   </script>
 </body>
 </html>
