@@ -1,90 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login & QR Code</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login & Generate QR</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+  input, button { width: 100%; padding: 10px; margin: 6px 0; font-size: 16px; }
+  #qrContainer { margin-top: 20px; text-align: center; }
+  #qrCanvas { margin: auto; }
+  #qrContainer { display: none; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Register & Get Your Rating QR</h2>
-    <form id="loginForm">
-      <input type="text" id="firstName" placeholder="First Name" required />
-      <input type="text" id="lastName" placeholder="Last Name" required />
-      <input type="email" id="email" placeholder="Email (@ed.amdsb.ca)" required />
-      <button type="submit">Generate QR</button>
-    </form>
 
-    <div id="qrContainer" class="hidden">
-      <h3>Your QR Code</h3>
-      <canvas id="qrCanvas"></canvas>
-      <p>Show this QR code to others to get rated!</p>
-    </div>
-  </div>
+<h2>Login & Get Your QR Code</h2>
 
-  <script src="libs/qrcode.min.js"></script>
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const qrContainer = document.getElementById('qrContainer');
-    const qrCanvas = document.getElementById('qrCanvas');
+<form id="loginForm">
+  <input type="text" id="firstName" placeholder="First Name" required />
+  <input type="text" id="lastName" placeholder="Last Name" required />
+  <input type="email" id="email" placeholder="Email (@ed.amdsb.ca)" required />
+  <button type="submit">Generate QR Code</button>
+</form>
+<div id="qrContainer">
+  <h3>Your Rating QR Code</h3>
+  <canvas id="qrCanvas"></canvas>
+  <p>Show this QR code so others can rate you.</p>
+</div>
+</div>
 
-    function saveUserData(user) {
-      localStorage.setItem('loggedInUser', JSON.stringify(user));
-      if (!localStorage.getItem('user_' + user.uid)) {
-        localStorage.setItem('user_' + user.uid, JSON.stringify({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          ratings: []
-        }));
-      }
+<!-- QRCode library from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script>
+  const loginForm = document.getElementById('loginForm');
+  const qrContainer = document.getElementById('qrContainer');
+  const qrCanvas = document.getElementById('qrCanvas');
+
+  // Save user data to localStorage and generate QR
+  function saveUserAndGenerateQR(user) {
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    // Save user profile if not exists
+    if (!localStorage.getItem('user_' + user.uid)) {
+      localStorage.setItem('user_' + user.uid, JSON.stringify({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        ratings: []
+      }));
     }
+    // Create rating URL with UID
+    const ratingURL = `${location.origin}/rating.html?uid=${user.uid}`;
 
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const firstName = e.target.firstName.value.trim();
-      const lastName = e.target.lastName.value.trim();
-      const email = e.target.email.value.trim().toLowerCase();
-
-      if (!email.endsWith('@ed.amdsb.ca')) {
-        alert('Email must end with @ed.amdsb.ca');
+    // Generate QR code
+    QRCode.toCanvas(qrCanvas, ratingURL, { width: 200 }, function (error) {
+      if (error) {
+        alert('QR code generation failed!');
+        console.error(error);
         return;
       }
-
-      const uid = email.split('@')[0]; // unique user ID
-
-      const user = { firstName, lastName, email, uid };
-
-      saveUserData(user);
-
-      const ratingURL = `${location.origin}/rating.html?uid=${uid}`;
-
-      QRCode.toCanvas(qrCanvas, ratingURL, function (error) {
-        if (error) {
-          alert('Failed to generate QR code');
-          console.error(error);
-          return;
-        }
-        qrContainer.classList.remove('hidden');
-      });
+      qrContainer.style.display = 'block';
     });
+  }
 
-    // If already logged in, auto-generate QR
-    window.onload = () => {
-      const storedUser = localStorage.getItem('loggedInUser');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        const ratingURL = `${location.origin}/rating.html?uid=${user.uid}`;
-        QRCode.toCanvas(qrCanvas, ratingURL, function (error) {
-          if (!error) {
-            qrContainer.classList.remove('hidden');
-          }
-        });
-      }
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const firstName = e.target.firstName.value.trim();
+    const lastName = e.target.lastName.value.trim();
+    const email = e.target.email.value.trim().toLowerCase();
+
+    if (!email.endsWith('@ed.amdsb.ca')) {
+      alert('Email must end with @ed.amdsb.ca');
+      return;
     }
-  </script>
+
+    const uid = email.split('@')[0];
+    const user = { firstName, lastName, email, uid };
+
+    saveUserAndGenerateQR(user);
+  });
+
+  // Auto-generate QR if user already logged in
+  window.onload = () => {
+    const storedUser = localStorage.getItem('loggedInUser');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      saveUserAndGenerateQR(user);
+    }
+  };
+</script>
+
 </body>
 </html>
