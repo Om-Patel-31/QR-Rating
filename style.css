@@ -67,6 +67,9 @@ button {
   color: white;
   font-weight: 700;
   cursor: pointer;
+  -webkit-user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-select: none;
   user-select: none;
 }
 
