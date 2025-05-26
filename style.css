@@ -68,8 +68,6 @@ button {
   font-weight: 700;
   cursor: pointer;
   -webkit-user-select: none;
-  -webkit-user-select: none;
-  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -80,6 +78,7 @@ button:hover {
 /* Stars container */
 .stars {
   margin-bottom: 1.5em;
+  -webkit-user-select: none;
   user-select: none;
 }
 
