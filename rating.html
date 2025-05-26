@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate a User</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Rate this person</h2>
+    <p id="personName"></p>
+    <div class="stars" id="stars"></div>
+    <button id="submitRating">Submit</button>
+  </div>
+
+  <script type="module">
+    import { db, auth } from './firebase-config.js';
+    import {
+      doc, getDoc, updateDoc, arrayUnion
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const starsDiv = document.getElementById('stars');
+    const personName = document.getElementById('personName');
+    const uid = new URLSearchParams(location.search).get('uid');
+    let currentRating = 0;
+
+    // Show stars
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('span');
+      star.textContent = '⭐';
+      star.dataset.value = i;
+      star.onclick = () => {
+        currentRating = i;
+        highlightStars(i);
+      };
+      starsDiv.appendChild(star);
+    }
+
+    function highlightStars(rating) {
+      document.querySelectorAll('#stars span').forEach(star => {
+        star.style.color = star.dataset.value <= rating ? 'gold' : 'gray';
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        alert("You must be logged in to rate.");
+        location.href = "index.html";
+        return;
+      }
+
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        personName.textContent = `${data.firstName} ${data.lastName}`;
+      }
+    });
+
+    document.getElementById('submitRating').onclick = async () => {
+      if (currentRating === 0) {
+        alert("Please select a rating.");
+        return;
+      }
+
+      const userRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(userRef);
+      const prevRatings = docSnap.data().ratings || [];
+      const newRatings = [...prevRatings, currentRating];
+      const avg = newRatings.reduce((a, b) => a + b, 0) / newRatings.length;
+
+      await updateDoc(userRef, {
+        ratings: arrayUnion(currentRating),
+        avgRating: avg
+      });
+
+      alert("Thanks for your rating!");
+    };
+  </script>
+</body>
+</html>

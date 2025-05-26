@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & QR Code</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Register & Get Your Rating QR</h2>
+    <form id="loginForm">
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+      <input type="email" id="email" placeholder="Email (@ed.amdsb.ca)" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Generate QR</button>
+    </form>
+    <div id="qrContainer" class="hidden">
+      <h3>Your QR Code</h3>
+      <canvas id="qrCanvas"></canvas>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db, auth } from './firebase-config.js';
+    import {
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import {
+      doc, setDoc, getDoc
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    import QRCode from './libs/qrcode.min.js';
+
+    const form = document.getElementById('loginForm');
+    const qrContainer = document.getElementById('qrContainer');
+    const qrCanvas = document.getElementById('qrCanvas');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstName = firstName.value.trim();
+      const lastName = lastName.value.trim();
+      const email = email.value.trim();
+      const password = password.value;
+
+      if (!email.endsWith("@ed.amdsb.ca")) {
+        alert("Email must end with @ed.amdsb.ca");
+        return;
+      }
+
+      try {
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          if (err.code === 'auth/email-already-in-use') {
+            await signInWithEmailAndPassword(auth, email, password);
+          } else {
+            throw err;
+          }
+        }
+
+        const uid = email.replace('@ed.amdsb.ca', '');
+        const userRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) {
+          await setDoc(userRef, {
+            firstName,
+            lastName,
+            email,
+            ratings: [],
+            avgRating: 0
+          });
+        }
+
+        const ratingLink = `${location.origin}/rating.html?uid=${uid}`;
+        QRCode.toCanvas(qrCanvas, ratingLink, function (error) {
+          if (error) console.error(error);
+          qrContainer.classList.remove('hidden');
+        });
+
+      } catch (err) {
+        console.error(err.message);
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
