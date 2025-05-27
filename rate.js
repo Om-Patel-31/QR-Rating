@@ -1,18 +1,18 @@
-const stars = document.querySelectorAll('#starRating .star');
-const selectedRatingInput = document.getElementById('selectedRating');
+const stars = document.querySelectorAll("#starRating .star");
+const selectedRatingInput = document.getElementById("selectedRating");
 let selectedValue = 0;
 
-stars.forEach(star => {
-  star.addEventListener('mouseover', () => {
+stars.forEach((star) => {
+  star.addEventListener("mouseover", () => {
     const val = parseInt(star.dataset.value);
     highlightStars(val);
   });
 
-  star.addEventListener('mouseout', () => {
+  star.addEventListener("mouseout", () => {
     highlightStars(selectedValue);
   });
 
-  star.addEventListener('click', () => {
+  star.addEventListener("click", () => {
     selectedValue = parseInt(star.dataset.value);
     selectedRatingInput.value = selectedValue;
     highlightStars(selectedValue);
@@ -20,18 +20,17 @@ stars.forEach(star => {
 });
 
 function highlightStars(rating) {
-  stars.forEach(star => {
+  stars.forEach((star) => {
     const starVal = parseInt(star.dataset.value);
     if (starVal <= rating) {
-      star.classList.add('selected');
-      star.classList.remove('hovered');
+      star.classList.add("selected");
+      star.classList.remove("hovered");
     } else {
-      star.classList.remove('selected');
-      star.classList.remove('hovered');
+      star.classList.remove("selected");
+      star.classList.remove("hovered");
     }
   });
 }
-
 
 function getEmailFromURL() {
   const params = new URLSearchParams(window.location.search);
@@ -62,15 +61,20 @@ function submitRating() {
 
 const emailParam = getEmailFromURL();
 if (emailParam) {
-  document.getElementById("userEmailDisplay").textContent = `Rating: ${emailParam}`;
+  document.getElementById(
+    "userEmailDisplay"
+  ).textContent = `Rating: ${emailParam}`;
 } else {
   document.getElementById("userEmailDisplay").textContent = "Scan QR to rate";
 }
 
 // Start QR scanner
 const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 200 });
-scanner.render((decoded) => {
-  window.location.href = decoded;
-}, (err) => {
-  console.warn("QR scan error", err);
-});
+scanner.render(
+  (decoded) => {
+    window.location.href = decoded;
+  },
+  (err) => {
+    console.warn("QR scan error", err);
+  }
+);
