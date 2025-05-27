@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rate User</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Rate This User</h2>
+    <p id="userEmailDisplay"></p>
+    <div class="stars" id="stars">
+      <span data-star="1">★</span>
+      <span data-star="2">★</span>
+      <span data-star="3">★</span>
+      <span data-star="4">★</span>
+      <span data-star="5">★</span>
+    </div>
+    <button onclick="submitRating()">Submit Rating</button>
+    <hr>
+    <h3>Scan QR Code</h3>
+    <div id="reader"></div>
+  </div>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="rate.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <input type="text" id="firstName" placeholder="First Name" required />
+    <input type="text" id="lastName" placeholder="Last Name" required />
+    <input type="email" id="email" placeholder="Email (must end with @ed.amdsb.ca)" required />
+    <button onclick="generateQR()">Generate QR & Go to Home</button>
+    <canvas id="qrcode"></canvas>
+    <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/qrious"></script>
+  <script src="script.js"></script>
+</body>
+</html>
