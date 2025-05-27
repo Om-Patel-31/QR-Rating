@@ -1,29 +1,25 @@
-/* style.css */
-
 :root {
-  --bg-light: #f0f2f5;
-  --bg-dark: #0e0f11;
-  --text-light: #1f2937;
-  --text-dark: #e5e7eb;
-  --primary: #6366f1;
-  --primary-hover: #818cf8;
-  --card-bg-light: rgba(255, 255, 255, 0.75);
-  --card-bg-dark: rgba(30, 41, 59, 0.75);
-  --border-color-light: #e2e8f0;
-  --border-color-dark: #334155;
-  --input-bg-light: rgba(255, 255, 255, 0.6);
-  --input-bg-dark: rgba(51, 65, 85, 0.5);
-  --glass-blur: blur(10px);
+  --bg-light: #ffffff;
+  --bg-dark: #121212;
+  --text-light: #000000;
+  --text-dark: #ffffff;
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --card-bg-light: #f1f1f1;
+  --card-bg-dark: #1f1f1f;
+  --border-color-light: #dcdcdc;
+  --border-color-dark: #2c2c2c;
+  --button-radius: 6px;
+  --transition-speed: 0.3s;
 }
 
-html, body {
-  min-height: 100vh;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: var(--bg-light);
   color: var(--text-light);
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 body.dark-mode {
@@ -32,149 +28,103 @@ body.dark-mode {
 }
 
 .container {
-  width: 90%;
-  max-width: 480px;
-  margin: 40px auto;
+  max-width: 460px;
+  margin: 60px auto;
   padding: 24px;
-  background: var(--card-bg-light);
+  background-color: var(--card-bg-light);
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  -webkit-backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  transition: background 0.4s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: background-color var(--transition-speed);
 }
 
 body.dark-mode .container {
-  background: var(--card-bg-dark);
+  background-color: var(--card-bg-dark);
 }
 
-h1 {
-  font-size: 1.8rem;
+h1, h2, p {
   text-align: center;
-  margin-bottom: 16px;
 }
 
-h2 {
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-p {
-  font-size: 1rem;
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-@media (max-width: 400px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  p {
-    font-size: 0.95rem;
-  }
-}
-
+/* Inputs */
 input {
   width: 100%;
-  padding: 10px 14px;
-  margin-top: 12px;
+  padding: 10px;
   font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  background: var(--input-bg-light);
-  color: var(--text-light);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  margin-top: 12px;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--button-radius);
+  background-color: #fff;
+  color: #000;
+  box-sizing: border-box;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 body.dark-mode input {
-  background: var(--input-bg-dark);
-  color: var(--text-dark);
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid var(--border-color-dark);
 }
 
-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary);
-}
-
+/* Buttons */
 button {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--primary);
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 4px;
+  width: fit-content;
+  min-width: 100px;
+  padding: 8px 16px;
+  margin: 0 auto;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--button-radius);
   cursor: pointer;
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.2);
-  transition: all 0.3s ease;
-  width: 100%;
-  margin-top: 15px;
+  transition: transform 0.2s ease, background-color var(--transition-speed), box-shadow 0.2s ease;
+  align-self: center;
 }
 
 button:hover {
-  background-color: var(--primary-hover);
-  color: white;
-  transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+body.dark-mode button {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* Button group layout */
 .button-group {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
-@media (min-width: 768px) {
-  .button-group {
-    flex-direction: row;
-    justify-content: center;
-    gap: 16px;
-  }
-
-  button {
-    width: auto;
-  }
-}
-
+/* Dark mode toggle */
 #darkModeToggle {
   position: fixed;
-  top: 12px;
-  right: 12px;
-  padding: 8px 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  background: rgba(99, 102, 241, 0.2);
-  color: var(--primary);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  font-size: 13px;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--button-radius);
   cursor: pointer;
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.15);
-  transition: all 0.3s ease;
   z-index: 1000;
+  transition: background-color var(--transition-speed);
 }
 
 #darkModeToggle:hover {
-  background-color: var(--primary-hover);
-  color: white;
+  background-color: var(--primary-dark);
 }
 
+/* Canvas */
 canvas {
   display: block;
   margin: 20px auto;
   max-width: 100%;
-  height: auto;
 }
