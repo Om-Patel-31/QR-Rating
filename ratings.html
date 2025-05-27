@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Ratings</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Your Profile</h2>
+      <canvas id="ratingQRCode"></canvas>
+      <p id="emailLabel"></p>
+      <p><strong>Average Rating:</strong> <span id="avgRating">0</span> ★</p>
+      <h3>Last 5 Ratings</h3>
+      <ul id="recentRatingsList"></ul>
+    </div>
+    <button id="backHomeBtn" onclick="window.location.href='index.html'">
+      🏠 Home
+    </button>
+    <button id="darkModeToggle">🌓 Toggle Mode</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious"></script>
+    <script src="ratings.js"></script>
+  </body>
+</html>

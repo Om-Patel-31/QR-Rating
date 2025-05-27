@@ -1,33 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RateMe - Home</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Welcome to RateMe</h1>
-    <p id="welcomeText">Please log in first to continue.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RateMe - Home</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to RateMe</h1>
+      <p id="welcomeText">Please log in first to continue.</p>
 
-    <div class="button-group">
-      <a href="login.html"><button id="btnLogin">🔐 Login & Generate QR</button></a>
-      <a href="ratings.html"><button id="btnRatings" disabled>⭐ View My Ratings</button></a>
-      <a href="rate.html"><button id="btnScan" disabled>📷 Scan & Rate Someone</button></a>
+      <div class="button-group">
+        <a href="login.html"
+          ><button id="btnLogin">🔐 Login & Generate QR</button></a
+        >
+        <a href="ratings.html"
+          ><button id="btnRatings" disabled>⭐ View My Ratings</button></a
+        >
+        <a href="rate.html"
+          ><button id="btnScan" disabled>📷 Scan & Rate Someone</button></a
+        >
+      </div>
     </div>
-  </div>
+    <button id="backHomeBtn" onclick="window.location.href='index.html'">
+      🏠 Home
+    </button>
+    <button id="darkModeToggle">🌓 Toggle Mode</button>
 
-  <script>
-    const email = localStorage.getItem("currentUserEmail");
-    const name = localStorage.getItem("currentUserName");
+    <script>
+      const email = localStorage.getItem("currentUserEmail");
+      const name = localStorage.getItem("currentUserName");
 
-    if (email && name) {
-      document.getElementById("welcomeText").textContent = `Welcome, ${name} (${email})`;
+      if (email && name) {
+        document.getElementById(
+          "welcomeText"
+        ).textContent = `Welcome, ${name} (${email})`;
 
-      document.getElementById("btnRatings").disabled = false;
-      document.getElementById("btnScan").disabled = false;
-    }
-  </script>
-</body>
+        document.getElementById("btnRatings").disabled = false;
+        document.getElementById("btnScan").disabled = false;
+      }
+      const toggle = document.getElementById("darkModeToggle");
+      toggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem(
+          "darkMode",
+          document.body.classList.contains("dark-mode")
+        );
+      });
+
+      // Restore dark mode on load
+      if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+      }
+    </script>
+  </body>
 </html>
