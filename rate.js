@@ -1,20 +1,37 @@
-let selectedRating = 0;
+const stars = document.querySelectorAll('#starRating .star');
+const selectedRatingInput = document.getElementById('selectedRating');
+let selectedValue = 0;
 
-const stars = document.querySelectorAll("#stars span");
-stars.forEach((star, i) => {
-  star.addEventListener("mouseover", () => highlightStars(i + 1));
-  star.addEventListener("mouseout", () => highlightStars(selectedRating));
-  star.addEventListener("click", () => {
-    selectedRating = i + 1;
-    highlightStars(selectedRating);
+stars.forEach(star => {
+  star.addEventListener('mouseover', () => {
+    const val = parseInt(star.dataset.value);
+    highlightStars(val);
+  });
+
+  star.addEventListener('mouseout', () => {
+    highlightStars(selectedValue);
+  });
+
+  star.addEventListener('click', () => {
+    selectedValue = parseInt(star.dataset.value);
+    selectedRatingInput.value = selectedValue;
+    highlightStars(selectedValue);
   });
 });
 
-function highlightStars(r) {
-  stars.forEach((s, i) => {
-    s.classList.toggle("selected", i < r);
+function highlightStars(rating) {
+  stars.forEach(star => {
+    const starVal = parseInt(star.dataset.value);
+    if (starVal <= rating) {
+      star.classList.add('selected');
+      star.classList.remove('hovered');
+    } else {
+      star.classList.remove('selected');
+      star.classList.remove('hovered');
+    }
   });
 }
+
 
 function getEmailFromURL() {
   const params = new URLSearchParams(window.location.search);
