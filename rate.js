@@ -1,44 +1,43 @@
+// rate.js
+
+// === DOM Elements ===
 const stars = document.querySelectorAll("#starRating .star");
 const selectedRatingInput = document.getElementById("selectedRating");
-let selectedValue = 0;
+const userEmailDisplay = document.getElementById("userEmailDisplay");
 
-stars.forEach((star) => {
-  star.addEventListener("mouseover", () => {
-    const val = parseInt(star.dataset.value);
-    highlightStars(val);
-  });
+let selectedRating = 0;
 
-  star.addEventListener("mouseout", () => {
-    highlightStars(selectedValue);
-  });
-
-  star.addEventListener("click", () => {
-    selectedValue = parseInt(star.dataset.value);
-    selectedRatingInput.value = selectedValue;
-    highlightStars(selectedValue);
-  });
-});
-
+// === Highlight Stars ===
 function highlightStars(rating) {
   stars.forEach((star) => {
-    const starVal = parseInt(star.dataset.value);
-    if (starVal <= rating) {
-      star.classList.add("selected");
-      star.classList.remove("hovered");
-    } else {
-      star.classList.remove("selected");
-      star.classList.remove("hovered");
-    }
+    const val = parseInt(star.dataset.value, 10);
+    star.classList.toggle("selected", val <= rating);
   });
 }
 
+// === Star Event Listeners ===
+stars.forEach((star) => {
+  const value = parseInt(star.dataset.value, 10);
+
+  star.addEventListener("mouseover", () => highlightStars(value));
+  star.addEventListener("mouseout", () => highlightStars(selectedRating));
+  star.addEventListener("click", () => {
+    selectedRating = value;
+    selectedRatingInput.value = selectedRating;
+    highlightStars(selectedRating);
+  });
+});
+
+// === Get Email From URL ===
 function getEmailFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("user");
 }
 
+// === Submit Rating ===
 function submitRating() {
   const email = getEmailFromURL();
+
   if (!email || !email.endsWith("@ed.amdsb.ca")) {
     alert("Invalid user.");
     return;
@@ -51,30 +50,24 @@ function submitRating() {
 
   const key = `ratings_${email}`;
   const data = JSON.parse(localStorage.getItem(key) || "[]");
+
   data.push({ rating: selectedRating, timestamp: Date.now() });
   localStorage.setItem(key, JSON.stringify(data));
 
-  alert(`Rated ${email} with ${selectedRating} ★`);
+  alert(`You rated ${email} with ${selectedRating} ★`);
   selectedRating = 0;
   highlightStars(0);
 }
 
+// === Display Email ===
 const emailParam = getEmailFromURL();
-if (emailParam) {
-  document.getElementById(
-    "userEmailDisplay"
-  ).textContent = `Rating: ${emailParam}`;
-} else {
-  document.getElementById("userEmailDisplay").textContent = "Scan QR to rate";
-}
+userEmailDisplay.textContent = emailParam
+  ? `Rating: ${emailParam}`
+  : "Scan QR to rate";
 
-// Start QR scanner
+// === QR Code Scanner ===
 const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 200 });
 scanner.render(
-  (decoded) => {
-    window.location.href = decoded;
-  },
-  (err) => {
-    console.warn("QR scan error", err);
-  }
+  (decodedText) => (window.location.href = decodedText),
+  (error) => console.warn("QR scan error:", error)
 );
