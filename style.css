@@ -1,25 +1,29 @@
+/* style.css */
+
 :root {
-  --bg-light: #f9f9fb;
-  --bg-dark: #121212;
-  --text-light: #1c1c1e;
-  --text-dark: #f5f5f5;
+  --bg-light: #f0f2f5;
+  --bg-dark: #0e0f11;
+  --text-light: #1f2937;
+  --text-dark: #e5e7eb;
   --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --card-bg-light: #ffffff;
-  --card-bg-dark: #1e1e1e;
-  --border-color-light: #e2e2e2;
-  --border-color-dark: #333;
-  --input-bg-light: #fefefe;
-  --input-bg-dark: #2a2a2a;
+  --primary-hover: #818cf8;
+  --card-bg-light: rgba(255, 255, 255, 0.75);
+  --card-bg-dark: rgba(30, 41, 59, 0.75);
+  --border-color-light: #e2e8f0;
+  --border-color-dark: #334155;
+  --input-bg-light: rgba(255, 255, 255, 0.6);
+  --input-bg-dark: rgba(51, 65, 85, 0.5);
+  --glass-blur: blur(10px);
 }
 
-body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+html, body {
+  min-height: 100vh;
   margin: 0;
   padding: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: var(--bg-light);
   color: var(--text-light);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 body.dark-mode {
@@ -28,116 +32,149 @@ body.dark-mode {
 }
 
 .container {
+  width: 90%;
   max-width: 480px;
-  margin: 60px auto;
-  padding: 32px;
-  background-color: var(--card-bg-light);
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeIn 0.5s ease-out;
+  margin: 40px auto;
+  padding: 24px;
+  background: var(--card-bg-light);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  -webkit-backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  transition: background 0.4s ease;
 }
 
 body.dark-mode .container {
-  background-color: var(--card-bg-dark);
+  background: var(--card-bg-dark);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-h1, h2, p {
+h1 {
+  font-size: 1.8rem;
   text-align: center;
-  margin: 0 0 16px;
-  transition: color 0.3s;
+  margin-bottom: 16px;
 }
 
-input, button {
-  display: block;
+h2 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+p {
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+}
+
+input {
   width: 100%;
-  padding: 14px 16px;
-  margin-top: 16px;
-  font-size: 15px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  border: 1px solid var(--border-color-light);
-  background-color: var(--input-bg-light);
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--input-bg-light);
   color: var(--text-light);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-body.dark-mode input,
-body.dark-mode button {
-  background-color: var(--input-bg-dark);
+body.dark-mode input {
+  background: var(--input-bg-dark);
   color: var(--text-dark);
-  border: 1px solid var(--border-color-dark);
 }
 
 input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-  transform: scale(1.02);
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 button {
-  background-color: var(--primary);
-  color: #fff;
-  border: none;
-  font-weight: 600;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
   cursor: pointer;
-  transform: scale(1);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 15px;
 }
 
 button:hover {
   background-color: var(--primary-hover);
-  transform: scale(1.03);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.2);
-}
-
-canvas {
-  display: block;
-  margin: 24px auto;
+  color: white;
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 24px;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-/* Dark mode toggle */
+@media (min-width: 768px) {
+  .button-group {
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  button {
+    width: auto;
+  }
+}
+
 #darkModeToggle {
   position: fixed;
-  top: 14px;
-  right: 14px;
-  padding: 10px 14px;
-  font-size: 18px;
-  background-color: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
+  top: 12px;
+  right: 12px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   cursor: pointer;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.15);
+  transition: all 0.3s ease;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 #darkModeToggle:hover {
   background-color: var(--primary-hover);
-  transform: rotate(20deg);
+  color: white;
 }
 
-@media (max-width: 600px) {
-  .container {
-    margin: 40px 20px;
-    padding: 24px;
-  }
-
-  #darkModeToggle {
-    font-size: 16px;
-    padding: 8px;
-  }
+canvas {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
 }
