@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rate User</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -21,7 +22,10 @@
     <button onclick="submitRating()">Submit Rating</button>
     <hr>
     <h3>Scan QR Code</h3>
-    <div id="reader"></div>
+  <div id="reader"></div>
+
+  <p>Scanned Email: <span id="scanned-email">None</span></p>
+
   </div>
 
   <button id="backHomeBtn" onclick="window.location.href='index.html'">🏠 Home</button>
