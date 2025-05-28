@@ -1,46 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RateMe - Home</title>
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Welcome to RateMe</h1>
-      <p id="welcomeText">Please log in first to continue.</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rate a User</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
 
-      <div class="button-group">
-        <a href="login.html"
-          ><button id="btnLogin">🔐 Login & Generate QR</button></a
-        >
-        <a href="ratings.html"
-          ><button id="btnRatings" disabled>⭐ View My Ratings</button></a
-        >
-        <a href="rate.html"
-          ><button id="btnScan" disabled>📷 Scan & Rate Someone</button></a
-        >
-      </div>
-    </div>
-    <button id="backHomeBtn" onclick="window.location.href='index.html'">
-      🏠 Home
-    </button>
-    <button id="darkModeToggle">🌓 Toggle Mode</button>
-    <script src="theme.js"></script>
-    <script>
-      const email = localStorage.getItem("currentUserEmail");
-      const name = localStorage.getItem("currentUserName");
+    #starButtons button {
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: gray;
+      transition: color 0.3s;
+    }
 
-      if (email && name) {
-        document.getElementById(
-          "welcomeText"
-        ).textContent = `Welcome, ${name} (${email})`;
+    #starButtons .selected {
+      color: gold;
+    }
 
-        document.getElementById("btnRatings").disabled = false;
-        document.getElementById("btnScan").disabled = false;
-      }
-    </script>
-  </body>
+    #ratingList {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rate a User</h1>
+  <input type="text" id="rateeInput" placeholder="Enter @ed.amdsb.ca email" />
+  <br><br>
+
+  <div id="starButtons"></div>
+  <br>
+
+  <label>
+    <input type="checkbox" id="anonymousCheckbox" checked>
+    Rate anonymously
+  </label>
+  <br><br>
+
+  <button id="submitBtn">Submit Rating</button>
+
+  <h2>Stats</h2>
+  <div id="statsDisplay">No ratings yet.</div>
+  <div id="ratingList"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <script src="rate.js" type="module"></script>
+</body>
 </html>
