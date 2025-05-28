@@ -28,7 +28,7 @@
       🏠 Home
     </button>
     <button id="darkModeToggle">🌓 Toggle Mode</button>
-
+    <script src="theme.js"></script>
     <script>
       const email = localStorage.getItem("currentUserEmail");
       const name = localStorage.getItem("currentUserName");
@@ -36,23 +36,10 @@
       if (email && name) {
         document.getElementById(
           "welcomeText"
-        ).textContent = Welcome, ${name} (${email});
+        ).textContent = `Welcome, ${name} (${email})`;
 
         document.getElementById("btnRatings").disabled = false;
         document.getElementById("btnScan").disabled = false;
-      }
-      const toggle = document.getElementById("darkModeToggle");
-      toggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem(
-          "darkMode",
-          document.body.classList.contains("dark-mode")
-        );
-      });
-
-      // Restore dark mode on load
-      if (localStorage.getItem("darkMode") === "true") {
-        document.body.classList.add("dark-mode");
       }
     </script>
   </body>
