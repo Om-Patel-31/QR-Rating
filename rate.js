@@ -1,91 +1,86 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const stars = document.querySelectorAll("#starRating .star");
-  const selectedRatingInput = document.getElementById("selectedRating");
-  let selectedValue = 0;
+const stars = document.querySelectorAll("#starRating .star");
+const selectedRatingInput = document.getElementById("selectedRating");
+let selectedValue = 0;
 
-  function highlightStars(rating) {
-    stars.forEach((star) => {
-      const starVal = parseInt(star.dataset.value, 10);
-      if (starVal <= rating) {
-        star.classList.add("selected");
-        star.classList.remove("hovered");
+stars.forEach((star) => {
+  star.addEventListener("mouseover", () => {
+    const val = parseInt(star.dataset.value);
+    stars.forEach((s) => {
+      const starVal = parseInt(s.dataset.value);
+      if (starVal <= val) {
+        s.classList.add("hovered");
       } else {
-        star.classList.remove("selected");
-        star.classList.remove("hovered");
+        s.classList.remove("hovered");
       }
-    });
-  }
-
-  stars.forEach((star) => {
-    star.addEventListener("mouseover", () => {
-      const val = parseInt(star.dataset.value, 10);
-      stars.forEach((s) => {
-        const starVal = parseInt(s.dataset.value, 10);
-        if (starVal <= val) {
-          s.classList.add("hovered");
-        } else {
-          s.classList.remove("hovered");
-        }
-      });
-    });
-
-    star.addEventListener("mouseout", () => {
-      stars.forEach((s) => s.classList.remove("hovered"));
-      highlightStars(selectedValue);
-    });
-
-    star.addEventListener("click", () => {
-      selectedValue = parseInt(star.dataset.value, 10);
-      selectedRatingInput.value = selectedValue;
-      highlightStars(selectedValue);
     });
   });
 
-  // Initialize with no stars highlighted
-  highlightStars(0);
+  star.addEventListener("mouseout", () => {
+    stars.forEach((s) => s.classList.remove("hovered"));
+    highlightStars(selectedValue);
+  });
+
+  star.addEventListener("click", () => {
+    selectedValue = parseInt(star.dataset.value);
+    selectedRatingInput.value = selectedValue;
+    highlightStars(selectedValue);
+  });
 });
 
-// Initialize QR code scanner
-const scanner = new Html5Qrcode("reader");
-const config = { fps: 10, qrbox: 250 };
-
-// Start scanning
-scanner
-  .start(
-    { facingMode: "environment" }, // Use back camera if available
-    config,
-    (qrCodeMessage) => {
-      try {
-        // Assuming QR code contains a URL with ?user=EMAIL or just email
-        let email = null;
-
-        // Try to extract email from URL param
-        if (qrCodeMessage.includes("?user=")) {
-          const urlParams = new URLSearchParams(qrCodeMessage.split("?")[1]);
-          email = urlParams.get("user");
-        } else {
-          // Maybe QR code is just the email string itself
-          email = qrCodeMessage.trim();
-        }
-
-        if (isValidEmail(email)) {
-          scannedEmail = email;
-          scannedEmailDisplay.textContent = scannedEmail;
-          userEmailDisplay.textContent = `Rate This User: ${scannedEmail}`;
-        } else {
-          alert(
-            "Scanned QR code does not contain a valid '@ed.amdsb.ca' email."
-          );
-        }
-      } catch (err) {
-        console.error("Error processing QR code: ", err);
-      }
-    },
-    (err) => {
-      // QR scan error callback - can ignore or log
-      // console.warn("QR scan error:", err);
+function highlightStars(rating) {
+  stars.forEach((star) => {
+    const starVal = parseInt(star.dataset.value);
+    if (starVal <= rating) {
+      star.classList.add("selected");
+      star.classList.remove("hovered");
+    } else {
+      star.classList.remove("selected");
+      star.classList.remove("hovered");
     }
-  )
-  .catch((err) => {
-    console.error("Unable to start QR scanner.", err);
   });
+}
+
+function getEmailFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("user");
+}
+
+function submitRating() {
+  const email = getEmailFromURL();
+  if (!email || !email.endsWith("@ed.amdsb.ca")) {
+    alert("Invalid user.");
+    return;
+  }
+
+  if (selectedValue === 0) {
+    alert("Please select a rating.");
+    return;
+  }
+
+  const key = `ratings_${email}`;
+  const data = JSON.parse(localStorage.getItem(key) || "[]");
+  data.push({ rating: selectedValue, timestamp: Date.now() });
+  localStorage.setItem(key, JSON.stringify(data));
+
+  alert(`Rated ${email} with ${selectedValue} ★`);
+  selectedValue = 0;
+  highlightStars(0);
+}
+
+const emailParam = getEmailFromURL();
+if (emailParam) {
+  document.getElementById("userEmailDisplay").textContent = `Rating: ${emailParam}`;
+} else {
+  document.getElementById("userEmailDisplay").textContent = "Scan QR to rate";
+}
+
+// Start QR scanner
+const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 200 });
+scanner.render(
+  (decoded) => {
+    window.location.href = decoded;
+  },
+  (err) => {
+    console.warn("QR scan error", err);
+  }
+);
