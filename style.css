@@ -131,3 +131,19 @@ canvas {
 
 /*
 ::contentReference[oaicite:0]{index=0}
+*/
+
+.star {
+  font-size: 2rem;
+  color: lightgray; /* default star color */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.star.hovered {
+  color: gold; /* highlight on hover */
+}
+
+.star.selected {
+  color: gold; /* yellow for selected stars */
+}
