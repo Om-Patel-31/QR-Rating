@@ -11,27 +11,24 @@
     <h2>Rate This User</h2>
     <p id="userEmailDisplay"></p>
     <div class="star-rating" id="starRating">
-  <span class="star" data-value="1">&#9733;</span>
-  <span class="star" data-value="2">&#9733;</span>
-  <span class="star" data-value="3">&#9733;</span>
-  <span class="star" data-value="4">&#9733;</span>
-  <span class="star" data-value="5">&#9733;</span>
-</div>
-<input type="hidden" id="selectedRating" name="rating" value="0" />
+      <span class="star" data-value="1">&#9733;</span>
+      <span class="star" data-value="2">&#9733;</span>
+      <span class="star" data-value="3">&#9733;</span>
+      <span class="star" data-value="4">&#9733;</span>
+      <span class="star" data-value="5">&#9733;</span>
+    </div>
+    <input type="hidden" id="selectedRating" name="rating" value="0" />
     <button onclick="submitRating()">Submit Rating</button>
     <hr>
     <h3>Scan QR Code</h3>
     <div id="reader"></div>
   </div>
-      <button id="backHomeBtn" onclick="window.location.href='index.html'">
-      🏠 Home
-    </button>
-    <button id="darkModeToggle">🌓 Toggle Mode</button>
+
+  <button id="backHomeBtn" onclick="window.location.href='index.html'">🏠 Home</button>
+  <button id="darkModeToggle">🌓 Toggle Mode</button>
+
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="rate.js"></script>
   <script src="theme.js"></script>
-<!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </body>
 </html>
