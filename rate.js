@@ -57,10 +57,10 @@ function submitRating() {
     return;
   }
 
-  const key = `ratings_${email}`;
-  const data = JSON.parse(localStorage.getItem(key) || "[]");
-  data.push({ rating: selectedValue, timestamp: Date.now() });
-  localStorage.setItem(key, JSON.stringify(data));
+const key = `ratings_${email}`;
+const data = JSON.parse(localStorage.getItem(key) || "[]");
+data.push({ rating: selectedRating, timestamp: Date.now() });
+localStorage.setItem(key, JSON.stringify(data));
 
   alert(`Rated ${email} with ${selectedValue} ★`);
   selectedValue = 0;
